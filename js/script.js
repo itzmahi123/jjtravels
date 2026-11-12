@@ -35,21 +35,28 @@ const observer = new IntersectionObserver(entries => {
 counters.forEach(counter => observer.observe(counter));
 
 // This demo opens WhatsApp with the enquiry details.
-// Replace the number below if the business booking number changes.
-document.getElementById("enquiry-form")?.addEventListener("submit", event => {
-  event.preventDefault();
-  const form = new FormData(event.currentTarget);
+// Replace the number below if the business enquiry number changes.
+document.getElementById("enquiry-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const form = new FormData(this);
+
   const message = [
     "Hello JJ Travels, I would like to enquire about a trip.",
+    "",
     `Name: ${form.get("name")}`,
     `Mobile: ${form.get("phone")}`,
     `Passengers: ${form.get("passengers")}`,
     `Vehicle: ${form.get("vehicle")}`,
     `Destination: ${form.get("destination") || "Not specified"}`
-  ].join("\\n");
+  ].join("\n");
+
   const url = `https://wa.me/917824996878?text=${encodeURIComponent(message)}`;
-  window.open(url, "_blank", "noopener");
-  document.getElementById("form-note").textContent = "Your enquiry is ready to send in WhatsApp.";
+
+  window.open(url, "_blank");
+
+  document.getElementById("form-note").textContent =
+    "Your enquiry is ready to send in WhatsApp.";
 });
 
 // CONTACT FORM - WHATSAPP ENQUIRY
