@@ -1,0 +1,26 @@
+{
+  "id": "./",
+  "name": "JJ Travels Chennai.",
+  "short_name": "JJ Travels",
+  "description": "JJ Travels Chennai - Tempo Traveller, Mini Bus, Bus, Volvo Bus and Cab rentals.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0B0B0B",
+  "theme_color": "#0B0B0B",
+  "icons": [
+    {
+      "src": "./logo.png",
+      "sizes": "1024x1024",
+      "type": "assets/logo.webp",
+      "purpose": "any"
+    },
+    {
+      "src": "./logo.png",
+      "sizes": "1024x1024",
+      "type": "assets/logo.webp",
+      "purpose": "maskable"
+    }
+  ]
+}
