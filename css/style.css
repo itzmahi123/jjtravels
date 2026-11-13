@@ -580,3 +580,479 @@
             padding: 100px 20px;
             text-align: center;
         }
+        .menu-toggle span {
+    background-color: #ffffff;
+}
+
+
+/* =========================================================
+   RESPONSIVE LAYOUT FIXES
+   Keeps the existing desktop design and fixes mobile overflow,
+   hero/form overlap, navigation spacing and narrow-screen grids.
+   ========================================================= */
+
+html,
+body {
+    max-width: 100%;
+    overflow-x: clip;
+}
+
+img,
+svg,
+video,
+iframe {
+    max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+/* Tablet adjustments */
+@media (max-width: 900px) {
+    .hero-form-wrap {
+        right: 22px;
+        width: min(350px, 42vw);
+    }
+
+    .hero-content {
+        max-width: 54%;
+    }
+
+    .hero h1 {
+        font-size: clamp(38px, 5.5vw, 58px);
+        overflow-wrap: break-word;
+    }
+
+    .about-grid {
+        gap: 35px;
+    }
+
+    .contact-layout {
+        gap: 32px;
+    }
+
+    .footer-grid {
+        gap: 30px;
+    }
+}
+
+/* Mobile layout */
+@media (max-width: 680px) {
+    html {
+        scroll-padding-top: 76px;
+    }
+
+    .container {
+        width: calc(100% - 32px);
+        max-width: 520px;
+    }
+
+    .topbar-inner {
+        min-height: 42px;
+        height: auto;
+        padding: 7px 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 4px 12px;
+        text-align: center;
+    }
+
+    .topbar a {
+        margin: 0 4px;
+        white-space: nowrap;
+    }
+
+    .site-header {
+        height: 70px;
+    }
+
+    .nav-wrap {
+        gap: 12px;
+    }
+
+    .brand {
+        min-width: 0;
+    }
+
+    .brand-logo {
+        height: 54px;
+        max-width: min(62vw, 230px);
+    }
+
+    .brand-name {
+        font-size: 16px;
+    }
+
+    .menu-toggle {
+        display: flex;
+        flex: 0 0 auto;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        min-width: 44px;
+        min-height: 44px;
+        padding: 10px;
+        cursor: pointer;
+    }
+
+    .menu-toggle span {
+        display: block;
+        width: 25px;
+        height: 3px;
+        border-radius: 3px;
+        background: #fff;
+    }
+
+    .main-nav {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        right: 0;
+        z-index: 30;
+        padding: 18px 22px 22px;
+        background: #081145;
+        box-shadow: 0 12px 20px rgba(13, 46, 78, .2);
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .main-nav.open {
+        display: flex;
+    }
+
+    .main-nav a {
+        padding: 5px 0;
+    }
+
+    .main-nav .nav-cta {
+        text-align: center;
+        padding: 12px 18px;
+    }
+
+    /*
+      Critical fix:
+      The enquiry form is no longer absolutely positioned over
+      the hero text on mobile. It becomes a normal block below it.
+    */
+    .hero {
+        min-height: 0;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        padding: 0;
+        background-position: 58% center;
+        overflow: visible;
+    }
+
+    .hero-shade {
+        pointer-events: none;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        width: calc(100% - 36px);
+        max-width: 520px;
+        margin: 0 auto;
+        padding: 64px 0 28px;
+    }
+
+    .eyebrow,
+    .section-kicker {
+        font-size: 10px;
+        letter-spacing: 2px;
+        line-height: 1.5;
+    }
+
+    .hero h1 {
+        max-width: 100%;
+        font-size: clamp(34px, 8.8vw, 48px);
+        line-height: 1.12;
+        letter-spacing: -1.5px;
+        overflow-wrap: break-word;
+        word-break: normal;
+    }
+
+    .hero-sub {
+        max-width: 100%;
+        margin: 18px 0 24px;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .hero-content .btn {
+        max-width: 100%;
+        gap: 12px;
+        padding: 13px 17px;
+    }
+
+    .hero-form-wrap {
+        position: relative;
+        top: auto;
+        right: auto;
+        bottom: auto;
+        left: auto;
+        z-index: 2;
+        width: calc(100% - 32px);
+        max-width: 520px;
+        margin: 0 auto 28px;
+    }
+
+    .enquiry-card {
+        width: 100%;
+        padding: 22px 20px;
+        box-shadow: 0 10px 30px rgba(11, 41, 71, .2);
+    }
+
+    .enquiry-card h2 {
+        font-size: 22px;
+        line-height: 1.25;
+    }
+
+    .enquiry-card > p {
+        font-size: 13px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .form-grid label {
+        min-width: 0;
+    }
+
+    .form-grid input,
+    .form-grid select {
+        min-width: 0;
+        width: 100%;
+        height: 44px;
+        font-size: 14px;
+    }
+
+    .section {
+        padding: 68px 0;
+    }
+
+    .about-section {
+        padding-top: 68px;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .about-visual {
+        height: 280px;
+        margin: 0 10px;
+    }
+
+    .about-copy h2,
+    .section-heading h2 {
+        font-size: clamp(25px, 7vw, 30px);
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .fleet-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 13px;
+    }
+
+    .fleet-image {
+        height: 145px;
+    }
+
+    .fleet-info {
+        padding: 13px;
+    }
+
+    .fleet-info h3 {
+        font-size: 13px;
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .package-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 13px;
+    }
+
+    .package-image {
+        height: 120px;
+    }
+
+    .package-info {
+        padding: 13px;
+    }
+
+    .package-info ul {
+        grid-template-columns: 1fr;
+    }
+
+    .testimonial-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-layout {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .contact-form {
+        padding: 24px 20px;
+    }
+
+    .contact-banner-inner {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 28px 20px;
+    }
+
+    .footer-contact {
+        grid-column: 1 / -1;
+    }
+
+    .info-grid,
+    .price-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .vehicle-row {
+        grid-template-columns: 1fr;
+    }
+
+    .vehicle-row.reverse .vehicle-photo {
+        order: 0;
+    }
+
+    .vehicle-photo {
+        min-height: 220px;
+    }
+
+    .vehicle-copy {
+        padding: 25px;
+    }
+
+    .quote-panel {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .map-section iframe {
+        height: 280px;
+    }
+
+    .google-review-header {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .google-review {
+        padding: 19px;
+    }
+
+    .price-section {
+        padding: 55px 0;
+    }
+
+    .whatsapp-float {
+        width: 54px;
+        height: 54px;
+        right: 16px;
+        bottom: 16px;
+    }
+}
+
+/* Very narrow phones */
+@media (max-width: 390px) {
+    .container {
+        width: calc(100% - 28px);
+    }
+
+    .hero-content {
+        width: calc(100% - 32px);
+        padding-top: 52px;
+    }
+
+    .hero h1 {
+        font-size: clamp(32px, 8.5vw, 38px);
+        letter-spacing: -1.2px;
+    }
+
+    .hero-form-wrap {
+        width: calc(100% - 24px);
+    }
+
+    .enquiry-card {
+        padding: 20px 16px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid .full {
+        grid-column: auto;
+    }
+
+    .fleet-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .fleet-image {
+        height: 190px;
+    }
+
+    .package-info ul {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .topbar-inner {
+        gap: 3px 8px;
+    }
+
+    .topbar a {
+        font-size: 10px;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
