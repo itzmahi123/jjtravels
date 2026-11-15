@@ -126,5 +126,23 @@ if (contactForm) {
 }
 // SERVICE WORKER REGISTRATION
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("./sw.js");
+  window.addEventListener("load", async () => {
+    const isLocal =
+      location.hostname === "localhost" ||
+      location.hostname === "127.0.0.1";
+
+    const isGitHubPages = location.protocol === "https:";
+
+    if (isLocal || isGitHubPages) {
+      try {
+        const registration =
+          await navigator.serviceWorker.register("./sw.js");
+
+        console.log("JJ Travels PWA registered:", registration.scope);
+
+      } catch (error) {
+        console.error("Service Worker registration failed:", error);
+      }
+    }
+  });
 }
