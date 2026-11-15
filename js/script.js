@@ -1,148 +1,289 @@
 
-// MOBILE NAVIGATION
-const menuButton = document.querySelector(".menu-toggle");
-const nav = document.querySelector(".main-nav");
+// JJ Travels site interactions — safe to load on every page.
+(() => {
+  'use strict';
 
-if (menuButton && nav) {
-  menuButton.addEventListener("click", () => {
-    const isOpen = nav.classList.toggle("open");
-    menuButton.setAttribute("aria-expanded", String(isOpen));
-  });
+  const menuButton = document.querySelector('.menu-toggle');
+  const nav = document.querySelector('.main-nav');
 
-  nav.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", () => {
-      nav.classList.remove("open");
-      menuButton.setAttribute("aria-expanded", "false");
+  if (menuButton && nav) {
+    const closeMenu = () => {
+      nav.classList.remove('open');
+      menuButton.setAttribute('aria-expanded', 'false');
+      menuButton.setAttribute('aria-label', 'Open navigation');
+    };
+
+    menuButton.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      menuButton.setAttribute('aria-expanded', String(open));
+      menuButton.setAttribute(
+        'aria-label',
+        open ? 'Close navigation' : 'Open navigation'
+      );
     });
-  });
-}
 
-// CURRENT YEAR
-const yearElement = document.getElementById("year");
+    nav.querySelectorAll('a').forEach(link =>
+      link.addEventListener('click', closeMenu)
+    );
 
-if (yearElement) {
-  yearElement.textContent = new Date().getFullYear();
-}
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeMenu();
+    });
+  }
 
-// COUNT-UP ANIMATION
-const counters = document.querySelectorAll("[data-count]");
+  // Automatically update the copyright year.
+  const year = document.getElementById('year');
+  if (year) {
+    year.textContent = String(new Date().getFullYear());
+  }
 
-if ("IntersectionObserver" in window) {
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
+  // Animated number counters.
+  if ('IntersectionObserver' in window) {
+    const counters = document.querySelectorAll('[data-count]');
 
-      const el = entry.target;
-      const target = Number(el.dataset.count);
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
 
-      if (!Number.isFinite(target)) return;
+        const el = entry.target;
+        const target = Number(el.dataset.count);
 
-      let current = 0;
-      const step = Math.max(1, Math.ceil(target / 35));
-
-      const timer = setInterval(() => {
-        current = Math.min(target, current + step);
-        el.textContent = current;
-
-        if (current >= target) {
-          clearInterval(timer);
+        if (!Number.isFinite(target) || target < 0) {
+          observer.unobserve(el);
+          return;
         }
-      }, 35);
 
-      observer.unobserve(el);
-    });
-  }, { threshold: 0.4 });
+        const duration = 900;
+        const start = performance.now();
 
-  counters.forEach(counter => observer.observe(counter));
-}
+        const tick = now => {
+          const progress = Math.min((now - start) / duration, 1);
+          el.textContent = String(Math.round(target * progress));
 
-// WHATSAPP ENQUIRY FORM
-const enquiryForm = document.getElementById("enquiry-form");
+          if (progress < 1) {
+            requestAnimationFrame(tick);
+          }
+        };
 
-if (enquiryForm) {
-  enquiryForm.addEventListener("submit", function (e) {
-    e.preventDefault();
+        requestAnimationFrame(tick);
+        observer.unobserve(el);
+      });
+    }, { threshold: 0.35 });
 
-    const form = new FormData(this);
+    counters.forEach(counter => observer.observe(counter));
+  }
 
-    const message = [
-      "Hello JJ Travels, I would like to enquire about a trip.",
-      "",
-      `Name: ${form.get("name") || ""}`,
-      `Mobile: ${form.get("phone") || ""}`,
-      `Passengers: ${form.get("passengers") || ""}`,
-      `Vehicle: ${form.get("vehicle") || ""}`,
-      `Destination: ${form.get("destination") || "Not specified"}`
-    ].join("\n");
-
+  // Open WhatsApp with the enquiry details.
+  function openWhatsApp(message, note) {
     const url = `https://wa.me/917824996878?text=${encodeURIComponent(message)}`;
 
-    window.open(url, "_blank", "noopener,noreferrer");
-
-    const note = document.getElementById("form-note");
-
     if (note) {
-      note.textContent = "Your enquiry is ready to send in WhatsApp.";
+      note.textContent =
+        'Opening WhatsApp with your enquiry. Please review and press Send there.';
     }
-  });
-}
 
-// CONTACT FORM - WHATSAPP ENQUIRY
-const contactForm = document.getElementById("contact-form");
+    window.location.assign(url);
+  }
 
-if (contactForm) {
-  contactForm.addEventListener("submit", function (event) {
-    event.preventDefault();
+  // Main enquiry form.
+  const enquiry = document.getElementById('enquiry-form');
 
-    const form = new FormData(this);
+  if (enquiry) {
+    enquiry.addEventListener('submit', event => {
+      event.preventDefault();
 
-    const name = form.get("name") || "";
-    const email = form.get("email") || "";
-    const phone = form.get("phone") || "";
-    const message = form.get("message") || "";
+      if (!enquiry.reportValidity()) return;
 
-    const whatsappMessage = [
-      "Hello JJ Travels!",
-      "",
-      `Name: ${name}`,
-      `Email: ${email}`,
-      `Phone: ${phone}`,
-      "",
-      "Message:",
-      message
-    ].join("\n");
+      const data = new FormData(enquiry);
+      const phone = String(data.get('phone') || '').trim();
 
-    const whatsappURL =
-      `https://wa.me/917824996878?text=${encodeURIComponent(whatsappMessage)}`;
-
-    window.open(whatsappURL, "_blank", "noopener,noreferrer");
-
-    const note = document.getElementById("contact-note");
-
-    if (note) {
-      note.textContent = "Your enquiry is ready to send through WhatsApp.";
-    }
-  });
-}
-// SERVICE WORKER REGISTRATION
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", async () => {
-    const isLocal =
-      location.hostname === "localhost" ||
-      location.hostname === "127.0.0.1";
-
-    const isGitHubPages = location.protocol === "https:";
-
-    if (isLocal || isGitHubPages) {
-      try {
-        const registration =
-          await navigator.serviceWorker.register("./sw.js");
-
-        console.log("JJ Travels PWA registered:", registration.scope);
-
-      } catch (error) {
-        console.error("Service Worker registration failed:", error);
+      if (!/^[+\d][\d\s()-]{7,18}$/.test(phone)) {
+        const note = document.getElementById('form-note');
+        if (note) {
+          note.textContent = 'Please enter a valid contact number.';
+        }
+        return;
       }
-    }
+
+      const message = [
+        'Hello JJ Travels, I would like to enquire about a trip.',
+        '',
+        `Name: ${data.get('name') || ''}`,
+        `Mobile: ${phone}`,
+        `Passengers: ${data.get('passengers') || ''}`,
+        `Vehicle: ${data.get('vehicle') || ''}`,
+        `Destination: ${data.get('destination') || 'Not specified'}`
+      ].join('\n');
+
+      openWhatsApp(message, document.getElementById('form-note'));
+    });
+  }
+
+  // Contact form.
+  const contact = document.getElementById('contact-form');
+
+  if (contact) {
+    contact.addEventListener('submit', event => {
+      event.preventDefault();
+
+      if (!contact.reportValidity()) return;
+
+      const data = new FormData(contact);
+      const phone = String(data.get('phone') || '').trim();
+
+      if (!/^[+\d][\d\s()-]{7,18}$/.test(phone)) {
+        const note = document.getElementById('contact-note');
+        if (note) {
+          note.textContent = 'Please enter a valid contact number.';
+        }
+        return;
+      }
+
+      const message = [
+        'Hello JJ Travels!',
+        '',
+        `Name: ${data.get('name') || ''}`,
+        `Email: ${data.get('email') || ''}`,
+        `Phone: ${phone}`,
+        '',
+        'Message:',
+        String(data.get('message') || '')
+      ].join('\n');
+
+      openWhatsApp(message, document.getElementById('contact-note'));
+    });
+  }
+
+  // Register the service worker on supported connections.
+  if (
+    'serviceWorker' in navigator &&
+    (
+      location.protocol === 'https:' ||
+      location.hostname === 'localhost' ||
+      location.hostname === '127.0.0.1'
+    )
+  ) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(error => {
+        console.error('Service worker registration failed:', error);
+      });
+    });
+  }
+})();
+const reviewSlider = document.querySelector('.testimonial-loop');
+const reviewTrack = document.querySelector('.testimonial-track');
+
+if (reviewSlider && reviewTrack) {
+  reviewSlider.addEventListener('pointerdown', () => {
+    reviewTrack.style.animationPlayState = 'paused';
+  });
+
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(event => {
+    reviewSlider.addEventListener(event, () => {
+      reviewTrack.style.animationPlayState = '';
+    });
   });
 }
+
+
+/* JJ TRAVELS TESTIMONIAL SLIDER */
+
+document.querySelectorAll('.testimonial-loop').forEach(slider => {
+  const track = slider.querySelector('.testimonial-track');
+  const firstGroup = slider.querySelector('.testimonial-group');
+
+  if (!track || !firstGroup) return;
+
+  let position = 0;
+  let lastTime = 0;
+  let paused = false;
+  let dragging = false;
+  let startX = 0;
+  let startScroll = 0;
+
+  const speed = 15; // Pixels per second
+
+  function loopWidth() {
+    return firstGroup.getBoundingClientRect().width +
+      parseFloat(getComputedStyle(track).gap || 0);
+  }
+
+  function animate(time) {
+    if (!lastTime) lastTime = time;
+
+    const delta = Math.min((time - lastTime) / 1000, 0.05);
+    lastTime = time;
+
+    if (!paused && !dragging) {
+      position += speed * delta;
+
+      const width = loopWidth();
+
+      if (width > 0 && position >= width) {
+        position -= width;
+      }
+
+      slider.scrollLeft = position;
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  slider.addEventListener('pointerdown', event => {
+    dragging = true;
+    paused = true;
+    startX = event.clientX;
+    startScroll = slider.scrollLeft;
+  });
+  
+  window.addEventListener('pointermove', event => {
+    if (!dragging) return;
+
+    const distance = event.clientX - startX;
+    slider.scrollLeft = startScroll - distance;
+    position = slider.scrollLeft;
+  });
+
+  window.addEventListener('pointerup', () => {
+    dragging = false;
+    position = slider.scrollLeft;
+  });
+
+  slider.addEventListener('mouseenter', () => {
+    paused = true;
+  });
+
+  slider.addEventListener('mouseleave', () => {
+    if (!dragging) {
+      position = slider.scrollLeft;
+      paused = false;
+    }
+  });
+
+  slider.addEventListener('touchstart', () => {
+    paused = true;
+  }, { passive: true });
+
+  slider.addEventListener('touchend', () => {
+    position = slider.scrollLeft;
+    paused = false;
+  }, { passive: true });
+    // Open the review link when clicking a card
+  slider.querySelectorAll('.testimonial').forEach(card => {
+    card.addEventListener('click', event => {
+      // Ignore clicks after dragging
+      if (dragging) return;
+
+      const link = card.dataset.link;
+
+      if (link) {
+        window.open(link, '_blank', 'noopener,noreferrer');
+      }
+    });
+  });
+
+  requestAnimationFrame(animate);
+});
+
+
+
